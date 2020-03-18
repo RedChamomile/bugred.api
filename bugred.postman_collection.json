@@ -1,0 +1,364 @@
+{
+	"info": {
+		"_postman_id": "7c36ab97-d35f-4cc1-b5dd-f2f20dc3d191",
+		"name": "bugred",
+		"description": "HW5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "doregister",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9c21316-26b0-41d4-b075-8e6b837ca397",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"name\": \"{{name}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/doregister?",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"doregister"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createcompany",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fe023c07-10f8-41c0-a34b-b22543bb7e04",
+						"exec": [
+							"var companyType = [",
+							"    'ИП',",
+							"    'ООО',",
+							"    'ОАО'];",
+							"    ",
+							"var randonNumber = Math.floor(Math.random()*companyType.length);",
+							"",
+							"pm.environment.set(\"company_type\", companyType[randonNumber]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "00e35f94-8fd7-4cca-9fa0-efdf7b1f95b8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"id_company\", jsonData.id_company);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n  \"company_name\": \"{{$randomCompanyName}}\",\r\n  \"company_type\": \"{{company_type}}\",\r\n  \"company_users\": [\"{{email}}\"],\r\n  \"email_owner\": \"{{email}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/createcompany",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"createcompany"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createuserwithtasks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "54ecc065-32fe-42e1-9e19-df08270738da",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"tasks\", jsonData.tasks[0].id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"email\": \"{{$randomEmail}}\",\r\n \"name\": \"{{$randomUserName}}\",\r\n \"tasks\": [{\r\n   \"title\": \"{{$randomJobTitle}}\",\r\n   \"description\": \"{{$randomLoremParagraph}}\"\r\n  }\r\n ],\r\n \"companies\": [\"{{id_company}}\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/createuserwithtasks",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"createuserwithtasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createuser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0f471ede-b210-4b37-843f-19393aefe966",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"email\": \"{{$randomEmail}}\",\r\n \"name\": \"{{$randomUserName}}\",\r\n \"tasks\": [\"{{tasks}}\"],\r\n \"companies\": [\"{{id_company}}\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/createuser",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"createuser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createuserwithtasksExtendedVersion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "54ecc065-32fe-42e1-9e19-df08270738da",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"tasks\", jsonData.tasks[0].id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8a1071db-168f-4e99-a6d9-27ad4c1d5626",
+						"exec": [
+							"var sex = [",
+							"    'm',",
+							"    'f'];",
+							"    ",
+							"var randonNumber = Math.floor(Math.random()*sex.length);",
+							"",
+							"pm.environment.set(\"gender\", sex[randonNumber]);",
+							"",
+							"var min = 100000000000;",
+							"var max = 1000000000000;",
+							"var ident = Math.floor(Math.random() * (max - min)) + min;",
+							"",
+							"pm.environment.set(\"inn\", ident);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"email\": \"{{$randomEmail}}\",\r\n \"name\": \"{{$randomUserName}}\",\r\n \"tasks\": [{\r\n   \"title\": \"{{$randomJobTitle}}\",\r\n   \"description\": \"{{$randomLoremParagraph}}\"\r\n  }\r\n ],\r\n \"companies\": [\"{{id_company}}\"],\r\n \"hobby\" : \"{{$randomLoremWords}}\",\r\n \"adres\" : \"{{$randomStreetAddress}}\",\r\n \"name1\" : \"{{$randomFirstName}}\",\r\n \"surname1\" :  \"{{$randomLastName}}\",\r\n \"fathername1\":\"{{$randomFullName}}\",\r\n \"cat\" : \"{{$randomWord}}\",\r\n \"dog\" : \"{{$randomWord}}\",\r\n \"parrot\" : \"{{$randomWord}}\",\r\n \"cavy\" :  \"{{$randomWord}}\",\r\n \"hamster\" : \"{{$randomWord}}\",\r\n \"squirrel\" : \"{{$randomWord}}\",\r\n \"phone\" : \"{{$randomPhoneNumber}}\",\r\n \"inn\" : \"{{inn}}\",\r\n \"gender\" : \"{{gender}}\",\r\n \"birthday\" :  \"{{birthday}}\",\r\n \"date_start\"  : \"{{date_start}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/createuserwithtasks",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"createuserwithtasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createuserExtendedVersion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0f471ede-b210-4b37-843f-19393aefe966",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "987f8df5-c3ca-4893-a9b2-6b6c4b31a872",
+						"exec": [
+							"var sex = [",
+							"    'm',",
+							"    'f'];",
+							"    ",
+							"var randonNumber = Math.floor(Math.random()*sex.length);",
+							"",
+							"pm.environment.set(\"gender\", sex[randonNumber]);",
+							"",
+							"var min = 100000000000;",
+							"var max = 1000000000000;",
+							"var ident = Math.floor(Math.random() * (max - min)) + min;",
+							"",
+							"pm.environment.set(\"inn\", ident);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"email\": \"{{$randomEmail}}\",\r\n \"name\": \"{{$randomUserName}}\",\r\n \"tasks\": [\"{{tasks}}\"],\r\n \"companies\": [\"{{id_company}}\"],\r\n \"hobby\" : \"{{$randomLoremWords}}\",\r\n \"adres\" : \"{{$randomStreetAddress}}\",\r\n \"name1\" : \"{{$randomFirstName}}\",\r\n \"surname1\" :  \"{{$randomLastName}}\",\r\n \"fathername1\":\"{{$randomFullName}}\",\r\n \"cat\" : \"{{$randomWord}}\",\r\n \"dog\" : \"{{$randomWord}}\",\r\n \"parrot\" : \"{{$randomWord}}\",\r\n \"cavy\" :  \"{{$randomWord}}\",\r\n \"hamster\" : \"{{$randomWord}}\",\r\n \"squirrel\" : \"{{$randomWord}}\",\r\n \"phone\" : \"{{$randomPhoneNumber}}\",\r\n \"inn\" : \"{{inn}}\",\r\n \"gender\" : \"{{gender}}\",\r\n \"birthday\" :  \"{{birthday}}\",\r\n \"date_start\"  : \"{{date_start}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/createuser",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"createuser"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
